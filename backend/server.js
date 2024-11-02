@@ -5,7 +5,7 @@ app.get("/test", (req, res) => {
 });
 const port = process.env.PORT || 2050;
 connectDb();
-app.listen(port (err) => {
+app.listen(port, (err) => {
   if (err) {
     console.error("error in server", err);
     return;
