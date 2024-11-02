@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: ipo-notification
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    rootDirectory: /opt/render/project/src/backend # Set this to your backend directory
+    envVars:
+      NODE_ENV: production # Add any environment variables you need

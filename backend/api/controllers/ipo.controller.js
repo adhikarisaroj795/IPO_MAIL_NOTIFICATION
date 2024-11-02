@@ -1,6 +1,15 @@
 const puppeteer = require("puppeteer");
+const fs = require("fs");
+const path = require("path"); // Import path module
 const cron = require("node-cron");
 const ipo_svc = require("../service/IpoService");
+
+const filePath = path.join(__dirname, "../service/IpoService.js");
+if (fs.existsSync(filePath)) {
+  console.log("file is here");
+} else {
+  console.error("Error: IpoService.js not found at", filePath);
+}
 
 class IpoController {
   static async ipoListing(req, res, next) {
@@ -29,10 +38,15 @@ class IpoController {
       } else {
         console.log("No new open IPOs to notify.");
       }
-      res.json(data);
+      // If used in cron, we won't send a response
+      if (res) {
+        res.json(data);
+      }
     } catch (error) {
       console.error("Error fetching IPO data:", error.message);
-      res.status(500).json({ error: "Internal Server Error" }); // Send error response
+      if (res) {
+        res.status(500).json({ error: "Internal Server Error" }); // Send error response
+      }
     } finally {
       if (browser) {
         await browser.close();
@@ -49,8 +63,8 @@ cron.schedule("06 07 * * *", async () => {
   console.log(`Running daily IPO check at ${nepalTime} Nepal time...`);
 
   try {
-    const ipoData = await IpoController.ipoListing();
-    console.log(`Fetched ${ipoData.length} IPO records.`);
+    // For the cron job, you won't have req and res, so adjust accordingly
+    await IpoController.ipoListing(); // No need for req/res
   } catch (error) {
     console.error("Error running scheduled IPO check:", error.message);
   }
