@@ -38,14 +38,13 @@ class IpoController {
       } else {
         console.log("No new open IPOs to notify.");
       }
-      // If used in cron, we won't send a response
       if (res) {
         res.json(data);
       }
     } catch (error) {
       console.error("Error fetching IPO data:", error.message);
       if (res) {
-        res.status(500).json({ error: "Internal Server Error" }); // Send error response
+        res.status(500).json({ error: "Internal Server Error" });
       }
     } finally {
       if (browser) {
@@ -55,7 +54,6 @@ class IpoController {
   }
 }
 
-// Schedule a daily check at 1:20 PM Nepal time (NPT)
 cron.schedule("06 07 * * *", async () => {
   const nepalTime = new Date().toLocaleTimeString("en-US", {
     timeZone: "Asia/Kathmandu",
@@ -63,8 +61,7 @@ cron.schedule("06 07 * * *", async () => {
   console.log(`Running daily IPO check at ${nepalTime} Nepal time...`);
 
   try {
-    // For the cron job, you won't have req and res, so adjust accordingly
-    await IpoController.ipoListing(); // No need for req/res
+    await IpoController.ipoListing();
   } catch (error) {
     console.error("Error running scheduled IPO check:", error.message);
   }

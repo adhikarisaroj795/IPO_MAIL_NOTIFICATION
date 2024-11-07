@@ -3,17 +3,16 @@ const cheerio = require("cheerio");
 const nodemailer = require("nodemailer");
 
 class IpoService {
-  static sentIpoSymbols = new Set(); // Track sent IPOs
-
+  static sentIpoSymbols = new Set();
   static async initializeBrowser() {
     let browser;
     try {
-      browser = await puppeteer.launch({ headless: true }); // Set headless: false for debugging
+      browser = await puppeteer.launch({ headless: true });
       const page = await browser.newPage();
       return { browser, page };
     } catch (error) {
       console.error("Error initializing browser:", error.message);
-      throw error; // Rethrow error for handling upstream
+      throw error;
     }
   }
 
@@ -26,7 +25,7 @@ class IpoService {
       return cheerio.load(content);
     } catch (error) {
       console.error("Error fetching IPO data:", error.message);
-      throw error; // Rethrow error for handling upstream
+      throw error;
     }
   }
 
